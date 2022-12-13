@@ -1,0 +1,9 @@
+IF OBJECT_ID (Ndbo.vw_SKUPrice, V) IS NOT NULL  
+DROP VIEW dbo.vw_SKUPrice;  
+GO
+CREATE VIEW dbo.vw_SKUPrice
+AS
+select s.ID,s.Code,s.Name
+		,b.PurchaseDate,b.Quantity,b.DiscountValue,b.Value, dbo.udf_GetSKUPrice(s.id) as calc_SKU
+FROM dbo.sku s 
+inner join dbo.Basket b on b.ID_SKU = s.id;
