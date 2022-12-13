@@ -1,0 +1,15 @@
+CREATE TRIGGER TR_Basket_insert_update 
+ON Basket 
+AFTER INSERT
+AS
+
+if (SELECT count(*) FROM inserted) >= 2
+begin 
+UPDATE Basket
+SET DiscountValue = [Value] * 0.05
+end 
+else 
+begin 
+UPDATE Basket
+SET DiscountValue = 0
+end
