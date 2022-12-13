@@ -1,0 +1,27 @@
+IF OBJECT_ID (Ndbo.usp_MakeFamilyPurchase , P) IS NOT NULL  
+	DROP PROCEDURE dbo.usp_MakeFamilyPurchase;  
+GO
+
+CREATE PROCEDURE dbo.usp_MakeFamilyPurchase  
+ @FamilySurName varchar(255) = null
+as
+begin 
+IF EXISTS ( SELECT 1 FROM Family WHERE FamilySurName = @FamilySurName )
+Begin
+	update f set 
+		BudgetValue = BudgetValue  - t.sum_val
+	from dbo.Family f 
+	 cross join (
+	 select sum(value) as sum_val 
+	 from dbo.Basket b
+	 ) t
+	 where f.FamilySurName = @FamilySurName
+	 END
+	 ELSE 
+	 BEGIN
+	Declare @msg varchar(255) =  @FamilySurName +  такой семьи нет. 
+Raiserror(@msg,18,16);
+
+	 END
+end 
+GO
